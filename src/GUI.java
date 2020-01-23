@@ -116,7 +116,6 @@ public class GUI
             model.addRow(meme);
         }
         catch(IOException e){}
-
     }
 
     /**

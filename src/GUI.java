@@ -137,6 +137,8 @@ public class GUI
         mainView.setViewportView(programTable);
     }
 
+    //yee
+
     /**
      * Switch the current view to the channels table
      */

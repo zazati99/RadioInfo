@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller extends SwingWorker<Boolean, TableData>
@@ -37,9 +38,13 @@ public class Controller extends SwingWorker<Boolean, TableData>
         while(programRunning)
         {
 
-            System.out.println("yee");
+            TableData data = new TableData("ye", "kek",
+                                           "oof", "boof");
 
-            Thread.sleep(1000 * 10);
+
+            publish(data);
+
+            Thread.sleep(1000 * 5);
         }
 
         return null;
@@ -48,6 +53,6 @@ public class Controller extends SwingWorker<Boolean, TableData>
     @Override
     protected void process(List<TableData> list)
     {
-        super.process(list);
+        gui.addProgrammeRow(list.get(list.size() - 1));
     }
 }

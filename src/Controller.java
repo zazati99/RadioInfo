@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Controller extends SwingWorker<Boolean, TableData>
+public class Controller extends SwingWorker<Boolean, ArrayList<TableData>>
 {
     /**
      * is the program running
@@ -34,15 +34,11 @@ public class Controller extends SwingWorker<Boolean, TableData>
     protected Boolean doInBackground() throws Exception
     {
 
+        TableDataFactory factory = new TableDataFactory();
+        publish(factory.parseEpisodeData("http://api.sr.se/v2/scheduledepisodes?channelid=132"));
 
         while(programRunning)
         {
-
-            TableData data = new TableData("ye", "kek",
-                                           "oof", "boof");
-
-
-            publish(data);
 
             Thread.sleep(1000 * 5);
         }
@@ -51,8 +47,14 @@ public class Controller extends SwingWorker<Boolean, TableData>
     }
 
     @Override
-    protected void process(List<TableData> list)
+    protected void process(List<ArrayList<TableData>> list)
     {
-        gui.addProgrammeRow(list.get(list.size() - 1));
+        ArrayList<TableData> data = list.get(list.size() - 1);
+        gui.episodeData = data;
+
+        for (int i = 0; i < data.size(); i++)
+        {
+            gui.addEpisodeRow(data.get(i));
+        }
     }
 }

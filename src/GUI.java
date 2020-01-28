@@ -1,21 +1,10 @@
-import com.sun.xml.internal.fastinfoset.util.StringArray;
-
-import javax.imageio.ImageIO;
-import javax.naming.event.ObjectChangeListener;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class GUI
 {
@@ -27,7 +16,7 @@ public class GUI
     /**
      * Table showing programs
      */
-    private JTable programTable;
+    private JTable episodeTable;
 
     /**
      * Table model for programme table
@@ -47,27 +36,38 @@ public class GUI
     /**
      * Shows information about a selected programme
      */
-    private JPanel infoPanel;
+    private EpisodeInfoPanel infoPanel;
 
     /**
      * JMenu containing all the channles
      */
     private JMenu channels;
 
+    /**
+     * The index of the last info shown
+     */
+    int lastInfoShown;
+
+    ArrayList<TableData> episodeData;
+
     public GUI() {
         frame = new JFrame("Radio Info");
-
         frame.setLayout(new BorderLayout());
 
         buildMenuBar();
-
         buildChannelProgramTable();
 
-        mainView = new JScrollPane(programTable);
+        mainView = new JScrollPane(episodeTable);
         frame.add(mainView, BorderLayout.CENTER);
+
+        infoPanel = new EpisodeInfoPanel();
+        infoPanel.setVisible(false);
+        frame.add(infoPanel, BorderLayout.SOUTH);
 
         frame.setPreferredSize(new Dimension(600, 400));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        lastInfoShown = -1;
 
         frame.pack();
     }
@@ -100,6 +100,7 @@ public class GUI
         menuBar.add(channels);
 
         frame.add(menuBar, BorderLayout.NORTH);
+
     }
 
 
@@ -109,36 +110,59 @@ public class GUI
     public void buildChannelProgramTable()
     {
         tableModel = new RadioInfoTableModel();
-        programTable = new JTable(tableModel);
+        episodeTable = new JTable(tableModel);
 
         tableModel.addColumn("Titel");
         tableModel.addColumn("Tid");
 
-        programTable.getColumn("Titel").
+        episodeTable.getColumn("Titel").
                 setCellRenderer(new RadioInfoTableRenderer());
 
-        programTable.getColumn("Tid").
+        episodeTable.getColumn("Tid").
                 setCellRenderer(new RadioInfoTableRenderer());
 
-        programTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        episodeTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                if (lastInfoShown != episodeTable.getSelectedRow())
+                {
+                    System.out.println(episodeTable.getSelectedRow());
 
-                System.out.println(programTable.getSelectedRow());
+                    infoPanel.setData(episodeData.get(episodeTable.getSelectedRow()));
+                    infoPanel.setVisible(true);
 
+                    lastInfoShown = episodeTable.getSelectedRow();
+                }
             }
         });
-
     }
 
-    public void addProgrammeRow(TableData data){
+    /**
+     * Add a programme to the table
+     * @param data The data for the programme
+     */
+    public void addEpisodeRow(TableData data){
 
         JLabel title = new JLabel(data.getTitle(), JLabel.CENTER);
-        JLabel time = new JLabel(data.getTime(), JLabel.CENTER);
+
+        String timeString = getHourMinute(data.getStartTime()) + " - " +
+                            getHourMinute(data.getEndTime());
+
+        JLabel time = new JLabel(timeString, JLabel.CENTER);
 
         Object[] rowData = {title, time};
 
         tableModel.addRow(rowData);
     }
 
+    /**
+     * Converts a localDateTime object to a String consisting of the
+     * hour and minute value
+     * @param time The LocalDataTime to convert
+     * @return The String containing the parsed time
+     */
+    public String getHourMinute(LocalDateTime time)
+    {
+        return time.getHour() + ":" + time.getMinute();
+    }
 }

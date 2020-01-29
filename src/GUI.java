@@ -3,6 +3,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -103,6 +104,13 @@ public class GUI
 
     }
 
+    public void addChannel(String name, ActionListener listener)
+    {
+        JMenuItem item = new JMenuItem(name);
+        item.addActionListener(listener);
+        channels.add(item);
+    }
+
 
     /**
      * Builds the table of programs
@@ -139,7 +147,7 @@ public class GUI
 
     /**
      * Add a programme to the table
-     * @param data The data for the programme
+     * @param data The data for the episode
      */
     public void addEpisodeRow(TableData data){
 
@@ -154,6 +162,26 @@ public class GUI
 
         tableModel.addRow(rowData);
     }
+
+    /**
+     * Adds a list of episodes to the table
+     * @param data The data for the episodes
+     */
+    public void addEpisodeRows(ArrayList<TableData> data){
+
+        for (int i = 0; i < tableModel.getRowCount(); i++)
+        {
+            tableModel.removeRow(i);
+        }
+
+        for (int i = 0; i < data.size(); i++)
+        {
+            addEpisodeRow(data.get(i));
+        }
+
+        episodeData = data;
+    }
+
 
     /**
      * Converts a localDateTime object to a String consisting of the

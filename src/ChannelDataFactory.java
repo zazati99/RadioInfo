@@ -2,11 +2,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,9 +17,9 @@ public class ChannelDataFactory
     private static final String CHANNELSURL =
             "http://api.sr.se/api/v2/channels/";
 
-    SwingWorkerDoneListener listener;
+    FactoryDoneListener listener;
 
-    public ChannelDataFactory(SwingWorkerDoneListener listner)
+    public ChannelDataFactory(FactoryDoneListener listner)
     {
         this.listener = listner;
     }
@@ -67,7 +65,7 @@ public class ChannelDataFactory
         try
         {
             ArrayList<ChannelData> data = get();
-            listener.SwingWorkerDone(data);
+            listener.factoryDone(data);
         }
         catch (InterruptedException e)
         {

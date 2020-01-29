@@ -33,7 +33,7 @@ public class Controller extends SwingWorker<Boolean, ArrayList<TableData>>
     @Override
     protected Boolean doInBackground() throws Exception
     {
-
+        /*
         TableDataFactory factory = new TableDataFactory();
         publish(factory.parseEpisodeData("http://api.sr.se/v2/scheduledepisodes?channelid=132"));
 
@@ -43,6 +43,8 @@ public class Controller extends SwingWorker<Boolean, ArrayList<TableData>>
             Thread.sleep(1000 * 5);
         }
 
+        return null;
+        */
         return null;
     }
 

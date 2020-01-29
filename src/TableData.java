@@ -1,7 +1,6 @@
 import javax.swing.*;
-import java.time.DateTimeException;
+import java.awt.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class TableData
 {
@@ -11,7 +10,7 @@ public class TableData
     LocalDateTime startTime;
     LocalDateTime endTime;
 
-    private JLabel imageLable;
+    private Image image;
 
     public TableData()
     {
@@ -38,9 +37,9 @@ public class TableData
         this.endTime = endTime;
     }
 
-    public void setImageLable(JLabel imageLable)
+    public void setImage(Image image)
     {
-        this.imageLable = imageLable;
+        this.image = image;
     }
 
     public String getTitle()
@@ -63,8 +62,8 @@ public class TableData
         return description;
     }
 
-    public JLabel getImage()
+    public Image getImage()
     {
-        return imageLable;
+        return image;
     }
 }

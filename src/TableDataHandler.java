@@ -5,7 +5,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -79,28 +78,22 @@ public class TableDataHandler extends DefaultHandler
                 latestEpisode().setEndTime(endTime);
                 break;
             case IMAGE:
-                JLabel imageLabel = createImageLabel(elementValue);
-                latestEpisode().setImageLable(imageLabel);
+                Image image = createImage(elementValue);
+                latestEpisode().setImage(image);
                 break;
         }
     }
 
-    private JLabel createImageLabel(String urlString)
+    private Image createImage(String urlString)
     {
         try
         {
-            JLabel imageLabel = new JLabel();
-
             URL url = new URL(urlString);
 
             Image image = ImageIO.read(url).
                     getScaledInstance(100, 100, 100);
 
-            ImageIcon icon = new ImageIcon(image);
-
-            imageLabel.setIcon(icon);
-
-            return imageLabel;
+            return image;
         }
         catch (MalformedURLException e){}
         catch (IOException e){}

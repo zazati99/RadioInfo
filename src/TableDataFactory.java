@@ -30,10 +30,22 @@ public class TableDataFactory
             saxParser.parse(input, tableDataHandler);
             return tableDataHandler.getEpisodeData();
         }
-        catch(ParserConfigurationException e){ e.printStackTrace(); }
-        catch(SAXException e){ e.printStackTrace(); }
-        catch(MalformedURLException e){ e.printStackTrace(); }
-        catch(IOException e){ e.printStackTrace(); }
+        catch(ParserConfigurationException e)
+        {
+            e.printStackTrace();
+        }
+        catch(SAXException e)
+        {
+            e.printStackTrace();
+        }
+        catch(MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
 
         return null;
     }

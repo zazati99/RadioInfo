@@ -28,16 +28,8 @@ public class EpisodeInfoPanel extends JPanel
 
     public void setData(TableData data)
     {
-        if (imageLable != null)
-        {
-            this.remove(imageLable);
-        }
-
-        imageLable = data.getImage();
-        if (data.getImage() != null)
-        {
-            this.add(imageLable, BorderLayout.WEST);
-        }
+        Image image = data.getImage();
+        imageLable.setIcon(image == null ? null : new ImageIcon(image));
 
         textArea.setText(
                         "<html>" +

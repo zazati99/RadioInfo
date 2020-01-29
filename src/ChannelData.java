@@ -1,6 +1,6 @@
 public class ChannelData
 {
-    private String Title;
+    private String title;
     private String scheduleUrl;
 
     public ChannelData()
@@ -10,7 +10,7 @@ public class ChannelData
 
     public void setTitle(String title)
     {
-        Title = title;
+        this.title = title;
     }
 
     public void setScheduleUrl(String scheduleUrl)
@@ -20,7 +20,7 @@ public class ChannelData
 
     public String getTitle()
     {
-        return Title;
+        return title;
     }
 
     public String getScheduleUrl()

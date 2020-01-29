@@ -11,8 +11,8 @@ public class RadioInfo
     public static void main(String[]  args)
     {
 
-        Controller controller = new Controller();
-        controller.execute();
+        Controller2 controller = new Controller2();
+        //controller.execute();
 
         /*
         try

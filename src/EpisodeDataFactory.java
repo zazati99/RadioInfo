@@ -61,10 +61,10 @@ public class EpisodeDataFactory extends SwingWorker<ArrayList<EpisodeData>, Void
             {
                 EpisodeData tableData = data.get(i);
 
-                if (tableData.getStartTime().isAfter(LocalDateTime.now()))
+                if (tableData.getStartTime().isBefore(LocalDateTime.now()))
                 {
                     tableData.setEpisodeStarted(true);
-                    if (tableData.getEndTime().isBefore(LocalDateTime.now()))
+                    if (tableData.getEndTime().isAfter(LocalDateTime.now()))
                     {
                         tableData.setEpisodeRunning(true);
                     }

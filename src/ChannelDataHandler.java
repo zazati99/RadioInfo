@@ -10,22 +10,40 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+/**
+ * Handler used for parsing ChannelData information
+ */
 public class ChannelDataHandler extends DefaultHandler
 {
+    /**
+     * Constant for channel tag
+     */
     private static final String CHANNEL = "channel";
 
+    /**
+     * Constant for name tag
+     */
     private static final String NAME = "name";
+
+    /**
+     * Constant for image tag
+     */
     private static final String IMAGE = "image";
+
+    /**
+     * Constant for schedule tag
+     */
     private static final String SCHEDULE = "scheduleurl";
 
+    /**
+     * The ChannelData array that will be created
+     */
     private ArrayList<ChannelData> channelData;
+
+    /**
+     * The value for the current element being parsed
+     */
     private String elementValue;
-
-
-    public ChannelDataHandler()
-    {
-
-    }
 
     @Override
     public void characters(char[] ch, int start,
@@ -110,6 +128,10 @@ public class ChannelDataHandler extends DefaultHandler
         return channelData.get(channelData.size() - 1);
     }
 
+    /**
+     * Gets the array of ChannelData
+     * @return The array
+     */
     public ArrayList<ChannelData> getChannelData()
     {
         return channelData;

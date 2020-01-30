@@ -1,3 +1,6 @@
+/**
+ * Interface with a funciton that will be called when something is done
+ */
 public interface FactoryDoneListener
 {
     /**

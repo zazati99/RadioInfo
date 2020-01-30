@@ -3,7 +3,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,22 +11,57 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class TableDataHandler extends DefaultHandler
+/**
+ * Handler for parsing EpisodeData
+ */
+public class EpisodeDataHandler extends DefaultHandler
 {
+    /**
+     * constant for scheduled episode tag
+     */
     private static final String SCHEDULEDEPISODE = "scheduledepisode";
 
+    /**
+     * constant for title tag
+     */
     private static final String TITLE = "title";
+
+    /**
+     * constant for description tag
+     */
     private static final String DESCRIPTION = "description";
+
+    /**
+     * constant for start time tag
+     */
     private static final String STARTTIME = "starttimeutc";
+
+    /**
+     * constant for end time tag
+     */
     private static final String ENDTIME = "endtimeutc";
+
+    /**
+     * constant for image URL tag
+     */
     private static final String IMAGE = "imageurl";
 
-    private ArrayList<TableData> episodeData;
+    /**
+     * ArrayList of EpisodeData
+     */
+    private ArrayList<EpisodeData> episodeData;
+
+    /**
+     * The string value of the current element
+     */
     private String elementValue;
 
+    /**
+     * Default image for EpisodeData
+     */
     Image defaultImage;
 
-    public TableDataHandler(Image defaultImage)
+    public EpisodeDataHandler(Image defaultImage)
     {
         this.defaultImage = defaultImage;
     }
@@ -51,7 +85,7 @@ public class TableDataHandler extends DefaultHandler
         switch (qName)
         {
             case SCHEDULEDEPISODE:
-                TableData data = new TableData();
+                EpisodeData data = new EpisodeData();
                 data.setImage(defaultImage);
                 episodeData.add(data);
                 break;
@@ -91,6 +125,11 @@ public class TableDataHandler extends DefaultHandler
         }
     }
 
+    /**
+     * Creates an image from a URL
+     * @param urlString URL to get image from
+     * @return the image
+     */
     private Image createImage(String urlString)
     {
         try
@@ -108,12 +147,16 @@ public class TableDataHandler extends DefaultHandler
         return null;
     }
 
-    private TableData latestEpisode()
+    /**
+     * Gets the latest episode data created
+     * @return the episode data
+     */
+    private EpisodeData latestEpisode()
     {
         return episodeData.get(episodeData.size() - 1);
     }
 
-    public ArrayList<TableData> getEpisodeData()
+    public ArrayList<EpisodeData> getEpisodeData()
     {
         return episodeData;
     }

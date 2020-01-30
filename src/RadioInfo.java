@@ -1,3 +1,7 @@
+/**
+ * Main class for RadioInfo
+ * This program shows information about Radio channels
+ */
 public class RadioInfo
 {
 

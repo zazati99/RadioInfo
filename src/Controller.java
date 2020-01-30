@@ -5,6 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * The Controller object for this program, it communicates with the
+ * GUI and the model classes.
+ */
 public class Controller implements ActionListener
 {
 
@@ -26,7 +30,7 @@ public class Controller implements ActionListener
     /**
      * The episode data for the current channel
      */
-    ArrayList<TableData> episodeData;
+    ArrayList<EpisodeData> episodeData;
 
     /**
      * The current channeldata
@@ -63,6 +67,7 @@ public class Controller implements ActionListener
                 });
 
 
+                // Actionlistener for updating the schedule
                 gui.addUpdateActionListener(new ActionListener()
                 {
                     @Override
@@ -76,6 +81,7 @@ public class Controller implements ActionListener
                 });
 
 
+                // Action listener for exiting the program
                 gui.addExitActionListener(new ActionListener()
                 {
                     @Override
@@ -101,7 +107,6 @@ public class Controller implements ActionListener
                             }
                         });
                 factory.execute();
-
 
                 Controller.this.timer =  new Timer(1000 * 60 * 60,
                         Controller.this);
@@ -140,19 +145,23 @@ public class Controller implements ActionListener
         }
     }
 
+    /**
+     * Creates an array of EpisodeData from a channel and changes the gui
+     * @param data The ChannelData to use when creating
+     */
     private void goToChannel(ChannelData data)
     {
         gui.changingChannel = true;
         gui.setGUIEnabled(false);
 
-        TableDataFactory factory = new TableDataFactory(data,
+        EpisodeDataFactory factory = new EpisodeDataFactory(data,
                 new FactoryDoneListener()
         {
             @Override
             public void factoryDone(Object returnValue)
             {
-                ArrayList<TableData> episodeData =
-                        (ArrayList<TableData>)returnValue;
+                ArrayList<EpisodeData> episodeData =
+                        (ArrayList<EpisodeData>)returnValue;
 
                 gui.changeChannel(episodeData);
 

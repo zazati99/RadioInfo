@@ -3,6 +3,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+/**
+ * Overide DefaultTableCellRenderer so that it returns a component
+ * instead of an Object
+ */
 public class RadioInfoTableRenderer extends DefaultTableCellRenderer {
 
     @Override

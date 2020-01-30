@@ -1,5 +1,8 @@
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * override TableModel that where cells are not editable
+ */
 public class RadioInfoTableModel extends DefaultTableModel
 {
 

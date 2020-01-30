@@ -13,41 +13,53 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class TableDataFactory extends SwingWorker<ArrayList<TableData>, Void>
+/**
+ * Creates an EpisodeData array by parsing XML from a URL
+ * on a SwingWorker thread
+ */
+public class EpisodeDataFactory extends SwingWorker<ArrayList<EpisodeData>, Void>
 {
 
+    /**
+     * Listener that will be called when this is done producing EpisodeData
+     */
     private FactoryDoneListener listener;
+
+    /**
+     * The cahnnel to create episode data from
+     */
     private ChannelData channelData;
 
-    public TableDataFactory(ChannelData data ,FactoryDoneListener listner)
+    public EpisodeDataFactory(ChannelData data , FactoryDoneListener listner)
     {
         this.listener = listner;
         this.channelData = data;
     }
 
     @Override
-    protected ArrayList<TableData> doInBackground() throws Exception
+    protected ArrayList<EpisodeData> doInBackground() throws Exception
     {
         try
         {
+            // Parse the XML from the channel data schedule URL
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
 
-            TableDataHandler tableDataHandler =
-                    new TableDataHandler(channelData.getImage());
+            EpisodeDataHandler tableDataHandler =
+                    new EpisodeDataHandler(channelData.getImage());
 
             URL url = new URL(channelData.getScheduleUrl());
             InputSource input = new InputSource(url.openStream());
 
             saxParser.parse(input, tableDataHandler);
 
-            ArrayList<TableData> data = tableDataHandler.getEpisodeData();
+            ArrayList<EpisodeData> data = tableDataHandler.getEpisodeData();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
             for (int i = 0; i < data.size(); i++)
             {
-                TableData tableData = data.get(i);
+                EpisodeData tableData = data.get(i);
 
                 if (tableData.getStartTime().isAfter(LocalDateTime.now()))
                 {
@@ -94,7 +106,7 @@ public class TableDataFactory extends SwingWorker<ArrayList<TableData>, Void>
     {
         try
         {
-            ArrayList<TableData> data = get();
+            ArrayList<EpisodeData> data = get();
             listener.factoryDone(data);
         }
         catch (InterruptedException e)

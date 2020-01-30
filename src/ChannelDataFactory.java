@@ -11,12 +11,23 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Creates channel data by parsing XML from a URL
+ * on a SwingWorker thread
+ */
 public class ChannelDataFactory
         extends SwingWorker<ArrayList<ChannelData>, Void>
 {
+    /**
+     * URL for the channels
+     */
     private static final String CHANNELSURL =
             "http://api.sr.se/api/v2/channels/";
 
+    /**
+     * Listener that will be called when this is done
+     * creating the ChannelData object
+     */
     FactoryDoneListener listener;
 
     public ChannelDataFactory(FactoryDoneListener listner)
@@ -29,6 +40,7 @@ public class ChannelDataFactory
     {
         try
         {
+            // Creates SAXParser and tries to parse the XML from the channel URL
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             ChannelDataHandler channelDataHandler = new ChannelDataHandler();
@@ -64,6 +76,7 @@ public class ChannelDataFactory
     {
         try
         {
+            // try to get the data and send it to the listener
             ArrayList<ChannelData> data = get();
             listener.factoryDone(data);
         }

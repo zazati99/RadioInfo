@@ -1,11 +1,13 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * GUI for RadioInfo
+ */
 public class GUI
 {
     /**
@@ -43,10 +45,14 @@ public class GUI
      */
     private JMenu channels;
 
-
+    /**
+     * Update button
+     */
     private JMenuItem updateButton;
 
-
+    /**
+     * Exit button
+     */
     private JMenuItem exitButton;
 
     /**
@@ -54,6 +60,9 @@ public class GUI
      */
     int lastInfoShown;
 
+    /**
+     * boolean used to see if the channel is currently being changed
+     */
     public boolean changingChannel;
 
     public GUI()
@@ -148,7 +157,7 @@ public class GUI
      * Shows the info panel for an episode
      * @param data The episode data
      */
-    public void showInfoPanel(TableData data)
+    public void showInfoPanel(EpisodeData data)
     {
         infoPanel.setData(data);
         infoPanel.setVisible(true);
@@ -174,7 +183,7 @@ public class GUI
      * Add a programme to the table
      * @param data The data for the episode
      */
-    public void addEpisodeRow(TableData data){
+    public void addEpisodeRow(EpisodeData data){
 
         JLabel title = new JLabel(data.getTitle(), JLabel.CENTER);
 
@@ -194,7 +203,7 @@ public class GUI
      * Adds a list of episodes to the table
      * @param data The data for the episodes
      */
-    public void changeChannel(ArrayList<TableData> data){
+    public void changeChannel(ArrayList<EpisodeData> data){
 
         infoPanel.setVisible(false);
 
@@ -213,6 +222,10 @@ public class GUI
         lastInfoShown = -1;
     }
 
+    /**
+     * Enables or disables the gui
+     * @param enabled the status
+     */
     public void setGUIEnabled(boolean enabled)
     {
         channels.setEnabled(enabled);

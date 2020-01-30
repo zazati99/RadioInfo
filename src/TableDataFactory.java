@@ -8,6 +8,8 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -15,12 +17,12 @@ public class TableDataFactory extends SwingWorker<ArrayList<TableData>, Void>
 {
 
     private FactoryDoneListener listener;
-    private String scheduleUrl;
+    private ChannelData channelData;
 
-    public TableDataFactory(String scheduleUrl ,FactoryDoneListener listner)
+    public TableDataFactory(ChannelData data ,FactoryDoneListener listner)
     {
         this.listener = listner;
-        this.scheduleUrl = scheduleUrl;
+        this.channelData = data;
     }
 
     @Override
@@ -30,12 +32,41 @@ public class TableDataFactory extends SwingWorker<ArrayList<TableData>, Void>
         {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            TableDataHandler tableDataHandler = new TableDataHandler();
 
-            URL url = new URL(scheduleUrl);
+            TableDataHandler tableDataHandler =
+                    new TableDataHandler(channelData.getImage());
+
+            URL url = new URL(channelData.getScheduleUrl());
             InputSource input = new InputSource(url.openStream());
 
             saxParser.parse(input, tableDataHandler);
+
+            ArrayList<TableData> data = tableDataHandler.getEpisodeData();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            for (int i = 0; i < data.size(); i++)
+            {
+                TableData tableData = data.get(i);
+
+                if (tableData.getStartTime().isAfter(LocalDateTime.now()))
+                {
+                    tableData.setEpisodeStarted(true);
+                    if (tableData.getEndTime().isBefore(LocalDateTime.now()))
+                    {
+                        tableData.setEpisodeRunning(true);
+                    }
+
+                }
+
+                String time = tableData.getStartTime().format(formatter);
+                time += " - ";
+                time += tableData.getEndTime().format(formatter);
+
+                tableData.setTime(time);
+
+            }
+
             return tableDataHandler.getEpisodeData();
         }
         catch(ParserConfigurationException e)

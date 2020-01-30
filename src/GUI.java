@@ -1,10 +1,9 @@
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class GUI
@@ -44,14 +43,21 @@ public class GUI
      */
     private JMenu channels;
 
+
+    private JMenuItem updateButton;
+
+
+    private JMenuItem exitButton;
+
     /**
      * The index of the last info shown
      */
     int lastInfoShown;
 
-    ArrayList<TableData> episodeData;
+    public boolean changingChannel;
 
-    public GUI() {
+    public GUI()
+    {
         frame = new JFrame("Radio Info");
         frame.setLayout(new BorderLayout());
 
@@ -69,6 +75,9 @@ public class GUI
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         lastInfoShown = -1;
+        changingChannel = false;
+
+        setGUIEnabled(false);
 
         frame.pack();
     }
@@ -91,19 +100,23 @@ public class GUI
         JMenu menu = new JMenu("RadioInfo");
         menuBar.add(menu);
 
-        JMenuItem updateItem = new JMenuItem("Uppdatera");
-        menu.add(updateItem);
+        updateButton = new JMenuItem("Uppdatera");
+        menu.add(updateButton);
 
-        JMenuItem exitItem = new JMenuItem("Avsluta");
-        menu.add(exitItem);
+        exitButton = new JMenuItem("Avsluta");
+        menu.add(exitButton);
 
         channels = new JMenu("Kanaler");
         menuBar.add(channels);
 
         frame.add(menuBar, BorderLayout.NORTH);
-
     }
 
+    /**
+     * Adds a channel to the JMenu
+     * @param name The channel name
+     * @param listener The Actionlistner for the menu item
+     */
     public void addChannel(String name, ActionListener listener)
     {
         JMenuItem item = new JMenuItem(name);
@@ -129,20 +142,32 @@ public class GUI
         episodeTable.getColumn("Tid").
                 setCellRenderer(new RadioInfoTableRenderer());
 
-        episodeTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                if (lastInfoShown != episodeTable.getSelectedRow())
-                {
-                    System.out.println(episodeTable.getSelectedRow());
+    }
 
-                    infoPanel.setData(episodeData.get(episodeTable.getSelectedRow()));
-                    infoPanel.setVisible(true);
+    /**
+     * Shows the info panel for an episode
+     * @param data The episode data
+     */
+    public void showInfoPanel(TableData data)
+    {
+        infoPanel.setData(data);
+        infoPanel.setVisible(true);
 
-                    lastInfoShown = episodeTable.getSelectedRow();
-                }
-            }
-        });
+        changeTitleColor(lastInfoShown, Color.DARK_GRAY);
+        lastInfoShown = episodeTable.getSelectedRow();
+        changeTitleColor(lastInfoShown, Color.LIGHT_GRAY);
+    }
+
+    /**
+     * Changes the color of the selected row
+     */
+    public void changeTitleColor(int row, Color color)
+    {
+        if (row >= 0 && row < tableModel.getRowCount())
+        {
+            JLabel label = (JLabel) tableModel.getValueAt(row, 0);
+            label.setForeground(color);
+        }
     }
 
     /**
@@ -153,13 +178,15 @@ public class GUI
 
         JLabel title = new JLabel(data.getTitle(), JLabel.CENTER);
 
-        String timeString = getHourMinute(data.getStartTime()) + " - " +
-                            getHourMinute(data.getEndTime());
+        JLabel time = new JLabel(data.getTime(), JLabel.CENTER);
 
-        JLabel time = new JLabel(timeString, JLabel.CENTER);
+        if (data.isEpisodeStarted())
+        {
+            time.setForeground(data.isEpisodeRunning() ?
+                    Color.GREEN : Color.RED);
+        }
 
         Object[] rowData = {title, time};
-
         tableModel.addRow(rowData);
     }
 
@@ -167,9 +194,12 @@ public class GUI
      * Adds a list of episodes to the table
      * @param data The data for the episodes
      */
-    public void addEpisodeRows(ArrayList<TableData> data){
+    public void changeChannel(ArrayList<TableData> data){
 
-        for (int i = 0; i < tableModel.getRowCount(); i++)
+        infoPanel.setVisible(false);
+
+        int rowCount = tableModel.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--)
         {
             tableModel.removeRow(i);
         }
@@ -179,18 +209,67 @@ public class GUI
             addEpisodeRow(data.get(i));
         }
 
-        episodeData = data;
+        changingChannel = false;
+        lastInfoShown = -1;
     }
 
+    public void setGUIEnabled(boolean enabled)
+    {
+        channels.setEnabled(enabled);
+        updateButton.setEnabled(enabled);
+    }
 
     /**
-     * Converts a localDateTime object to a String consisting of the
-     * hour and minute value
-     * @param time The LocalDataTime to convert
-     * @return The String containing the parsed time
+     * Adds a selectionlistener to the episode table
+     * @param listener
      */
-    public String getHourMinute(LocalDateTime time)
+    public void addListSelectionListener(ListSelectionListener listener)
     {
-        return time.getHour() + ":" + time.getMinute();
+        episodeTable.getSelectionModel().addListSelectionListener(listener);
+    }
+
+    /**
+     * Adds actionlistener to the exit button
+     * @param listener the actionlistener
+     */
+    public void addExitActionListener(ActionListener listener)
+    {
+        exitButton.addActionListener(listener);
+    }
+
+    /**
+     * Adds actionlistener to the update button
+     * @param listener the actionlistener
+     */
+    public void addUpdateActionListener(ActionListener listener)
+    {
+        updateButton.addActionListener(listener);
+    }
+
+    /**
+     * Gets the selected row in the epsidoeTable
+     * @return The index of the row
+     */
+    public int getSelectedEpisode()
+    {
+        return episodeTable.getSelectedRow();
+    }
+
+    /**
+     * Checks if the channel is currently being changed
+     * @return true if it's being changed, false if it isn't
+     */
+    public boolean isChangingChannel()
+    {
+        return changingChannel;
+    }
+
+    /**
+     * Gets the index of the episode info that was shown
+     * @return The index of the last info
+     */
+    public int getLastInfoShown()
+    {
+        return lastInfoShown;
     }
 }

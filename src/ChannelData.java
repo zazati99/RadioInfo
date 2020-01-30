@@ -1,7 +1,10 @@
+import java.awt.*;
+
 public class ChannelData
 {
     private String title;
     private String scheduleUrl;
+    private Image image;
 
     public ChannelData()
     {
@@ -18,6 +21,11 @@ public class ChannelData
         this.scheduleUrl = scheduleUrl;
     }
 
+    public void setImage(Image image)
+    {
+        this.image = image;
+    }
+
     public String getTitle()
     {
         return title;
@@ -26,5 +34,10 @@ public class ChannelData
     public String getScheduleUrl()
     {
         return scheduleUrl;
+    }
+
+    public Image getImage()
+    {
+        return image;
     }
 }

@@ -1,62 +1,167 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Controller extends SwingWorker<Boolean, ArrayList<TableData>>
+public class Controller implements ActionListener
 {
-    /**
-     * is the program running
-     */
-    boolean programRunning;
 
     /**
-     * The GUI
+     * The gui
      */
     GUI gui;
 
+    /**
+     * Timer that schedules updates
+     */
+    Timer timer;
+
+    /**
+     * The List of all channeldata
+     */
+    ArrayList<ChannelData> channelData;
+
+    /**
+     * The episode data for the current channel
+     */
+    ArrayList<TableData> episodeData;
+
+    /**
+     * The current channeldata
+     */
+    ChannelData currentChannel;
+
     public Controller()
     {
-        programRunning = true;
-
-        SwingUtilities.invokeLater(new Runnable()
-        {
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
 
-                gui = new GUI();
+                Controller.this.gui = new GUI();
                 gui.show();
 
+
+                // Selection listener for changing the info panel
+                gui.addListSelectionListener(new ListSelectionListener()
+                {
+                    @Override
+                    public void valueChanged(
+                            ListSelectionEvent listSelectionEvent)
+                    {
+                        if (!gui.isChangingChannel())
+                        {
+                            if (gui.getSelectedEpisode() !=
+                                    gui.getLastInfoShown())
+                            {
+                                gui.showInfoPanel(episodeData.get(
+                                        gui.getSelectedEpisode()));
+                            }
+                        }
+                    }
+                });
+
+
+                gui.addUpdateActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent)
+                    {
+                        if (currentChannel != null)
+                        {
+                            goToChannel(currentChannel);
+                        }
+                    }
+                });
+
+
+                gui.addExitActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent)
+                    {
+                        System.exit(0);
+                    }
+                });
+
+
+                // Gets the channelData
+                ChannelDataFactory factory = new ChannelDataFactory(
+                        new FactoryDoneListener()
+                        {
+                            @Override
+                            public void factoryDone(Object returnValue)
+                            {
+                                Controller.this.channelData =
+                                        (ArrayList<ChannelData>)returnValue;
+
+                                Controller.this.addChannelButtons();
+                                gui.setGUIEnabled(true);
+                            }
+                        });
+                factory.execute();
+
+
+                Controller.this.timer =  new Timer(1000 * 60 * 60,
+                        Controller.this);
+
+                timer.setRepeats(true);
+                timer.start();
             }
         });
     }
 
     @Override
-    protected Boolean doInBackground() throws Exception
+    public void actionPerformed(ActionEvent actionEvent)
     {
-        /*
-        TableDataFactory factory = new TableDataFactory();
-        publish(factory.parseEpisodeData("http://api.sr.se/v2/scheduledepisodes?channelid=132"));
-
-        while(programRunning)
+        if (currentChannel != null)
         {
-
-            Thread.sleep(1000 * 5);
+            goToChannel(currentChannel);
         }
-
-        return null;
-        */
-        return null;
     }
 
-    @Override
-    protected void process(List<ArrayList<TableData>> list)
+    /**
+     * Adds channel buttons
+     */
+    private void addChannelButtons()
     {
-        ArrayList<TableData> data = list.get(list.size() - 1);
-        gui.episodeData = data;
-
-        for (int i = 0; i < data.size(); i++)
+        for (int i = 0; i < channelData.size(); i++)
         {
-            gui.addEpisodeRow(data.get(i));
+            ChannelData channel = channelData.get(i);
+            gui.addChannel(channel.getTitle(), new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent)
+                {
+                    goToChannel(channel);
+                }
+            });
         }
+    }
+
+    private void goToChannel(ChannelData data)
+    {
+        gui.changingChannel = true;
+        gui.setGUIEnabled(false);
+
+        TableDataFactory factory = new TableDataFactory(data,
+                new FactoryDoneListener()
+        {
+            @Override
+            public void factoryDone(Object returnValue)
+            {
+                ArrayList<TableData> episodeData =
+                        (ArrayList<TableData>)returnValue;
+
+                gui.changeChannel(episodeData);
+
+                Controller.this.episodeData = episodeData;
+                gui.setGUIEnabled(true);
+            }
+        });
+
+        factory.execute();
+        currentChannel = data;
     }
 }

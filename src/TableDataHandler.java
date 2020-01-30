@@ -25,6 +25,13 @@ public class TableDataHandler extends DefaultHandler
     private ArrayList<TableData> episodeData;
     private String elementValue;
 
+    Image defaultImage;
+
+    public TableDataHandler(Image defaultImage)
+    {
+        this.defaultImage = defaultImage;
+    }
+
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException
     {
@@ -45,8 +52,8 @@ public class TableDataHandler extends DefaultHandler
         {
             case SCHEDULEDEPISODE:
                 TableData data = new TableData();
+                data.setImage(defaultImage);
                 episodeData.add(data);
-
                 break;
         }
     }

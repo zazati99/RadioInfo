@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 
@@ -9,6 +8,11 @@ public class TableData
 
     LocalDateTime startTime;
     LocalDateTime endTime;
+
+    String time;
+
+    boolean episodeStarted;
+    boolean episodeRunning;
 
     private Image image;
 
@@ -42,6 +46,21 @@ public class TableData
         this.image = image;
     }
 
+    public void setEpisodeStarted(boolean isOver)
+    {
+        this.episodeStarted = isOver;
+    }
+
+    public void setEpisodeRunning(boolean isRunning)
+    {
+        this.episodeRunning = isRunning;
+    }
+
+    public void setTime(String time)
+    {
+        this.time = time;
+    }
+
     public String getTitle()
     {
         return title;
@@ -65,5 +84,20 @@ public class TableData
     public Image getImage()
     {
         return image;
+    }
+
+    public boolean isEpisodeStarted()
+    {
+        return episodeStarted;
+    }
+
+    public boolean isEpisodeRunning()
+    {
+        return episodeRunning;
+    }
+
+    public String getTime()
+    {
+        return time;
     }
 }

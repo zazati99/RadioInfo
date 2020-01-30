@@ -2,7 +2,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.imageio.ImageIO;
 import javax.swing.event.ChangeEvent;
+import java.awt.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class ChannelDataHandler extends DefaultHandler
@@ -10,6 +15,7 @@ public class ChannelDataHandler extends DefaultHandler
     private static final String CHANNEL = "channel";
 
     private static final String NAME = "name";
+    private static final String IMAGE = "image";
     private static final String SCHEDULE = "scheduleurl";
 
     private ArrayList<ChannelData> channelData;
@@ -60,6 +66,39 @@ public class ChannelDataHandler extends DefaultHandler
         {
             latestChannel().setScheduleUrl(elementValue);
         }
+
+        switch (qName)
+        {
+            case SCHEDULE:
+                latestChannel().setScheduleUrl(elementValue);
+                break;
+            case IMAGE:
+                    Image image = createImage(elementValue);
+                    latestChannel().setImage(image);
+                break;
+        }
+    }
+
+    /**
+     * Create image from url
+     * @param urlString The url string
+     * @return The image
+     */
+    private Image createImage(String urlString)
+    {
+        try
+        {
+            URL url = new URL(urlString);
+
+            Image image = ImageIO.read(url).
+                    getScaledInstance(100, 100, 100);
+
+            return image;
+        }
+        catch (MalformedURLException e){}
+        catch (IOException e){}
+
+        return null;
     }
 
     /**

@@ -183,7 +183,8 @@ public class GUI
      * Add a programme to the table
      * @param data The data for the episode
      */
-    public void addEpisodeRow(EpisodeData data){
+    public void addEpisodeRow(EpisodeData data)
+    {
 
         JLabel title = new JLabel(data.getTitle(), JLabel.CENTER);
 
@@ -203,7 +204,8 @@ public class GUI
      * Adds a list of episodes to the table
      * @param data The data for the episodes
      */
-    public void changeChannel(ArrayList<EpisodeData> data){
+    public void changeChannel(ArrayList<EpisodeData> data)
+    {
 
         infoPanel.setVisible(false);
 

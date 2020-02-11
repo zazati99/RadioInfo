@@ -48,7 +48,10 @@ public class EpisodeDataFactory extends SwingWorker<ArrayList<EpisodeData>, Void
             EpisodeDataHandler tableDataHandler =
                     new EpisodeDataHandler(channelData.getImage());
 
-            URL url = new URL(channelData.getScheduleUrl());
+            String urlString =
+                    channelData.getScheduleUrl() + "&pagination=false";
+
+            URL url = new URL(urlString);
             InputSource input = new InputSource(url.openStream());
 
             saxParser.parse(input, tableDataHandler);

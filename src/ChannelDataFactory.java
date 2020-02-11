@@ -22,7 +22,7 @@ public class ChannelDataFactory
      * URL for the channels
      */
     private static final String CHANNELSURL =
-            "http://api.sr.se/api/v2/channels/";
+            "http://api.sr.se/api/v2/channels/?pagination=false";
 
     /**
      * Listener that will be called when this is done

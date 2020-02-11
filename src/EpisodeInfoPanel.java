@@ -84,7 +84,16 @@ public class EpisodeInfoPanel extends JPanel
         imageLabel.setIcon(image == null ? null : new ImageIcon(image));
 
         title.setText(data.getTitle());
-        description.setText("<html>" + data.getDescription() + "</html>");
+
+        if (data.getDescription() == null)
+        {
+            description.setText("Kunde inte hitta en tillgänglig" +
+                                " beskrivning för programmet");
+        }
+        else
+        {
+            description.setText("<html>" + data.getDescription() + "</html>");
+        }
 
         time.setText(data.getTime());
 

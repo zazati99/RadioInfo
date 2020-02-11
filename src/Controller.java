@@ -151,26 +151,34 @@ public class Controller implements ActionListener
      */
     private void goToChannel(ChannelData data)
     {
-        gui.changingChannel = true;
-        gui.setGUIEnabled(false);
-
-        EpisodeDataFactory factory = new EpisodeDataFactory(data,
-                new FactoryDoneListener()
+        // Check if the channel has an availible Shedule
+        if (data.getScheduleUrl() != null)
         {
-            @Override
-            public void factoryDone(Object returnValue)
-            {
-                ArrayList<EpisodeData> episodeData =
-                        (ArrayList<EpisodeData>)returnValue;
+            gui.changingChannel = true;
+            gui.setGUIEnabled(false);
 
-                gui.changeChannel(episodeData);
+            EpisodeDataFactory factory = new EpisodeDataFactory(data,
+                    new FactoryDoneListener() {
+                        @Override
+                        public void factoryDone(Object returnValue) {
+                            ArrayList<EpisodeData> episodeData =
+                                    (ArrayList<EpisodeData>) returnValue;
 
-                Controller.this.episodeData = episodeData;
-                gui.setGUIEnabled(true);
-            }
-        });
+                            gui.changeChannel(episodeData);
 
-        factory.execute();
-        currentChannel = data;
+                            Controller.this.episodeData = episodeData;
+                            gui.setGUIEnabled(true);
+                        }
+                    });
+
+            factory.execute();
+            currentChannel = data;
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null,
+                    "Det finns ingen tillgänglig tablå för den här kanalen",
+                    "info",  JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }

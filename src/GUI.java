@@ -2,8 +2,13 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 
 /**
  * GUI for RadioInfo
@@ -43,7 +48,12 @@ public class GUI
     /**
      * JMenu containing all the channles
      */
-    private JMenu channels;
+    private JPopupMenu channelsMenu;
+
+    /**
+     *
+     */
+    private JMenuItem channels;
 
     /**
      * Update button
@@ -65,6 +75,9 @@ public class GUI
      */
     public boolean changingChannel;
 
+    /**
+     * Gui constructor, initializes components
+     */
     public GUI()
     {
         frame = new JFrame("Radio Info");
@@ -115,7 +128,17 @@ public class GUI
         exitButton = new JMenuItem("Avsluta");
         menu.add(exitButton);
 
-        channels = new JMenu("Kanaler");
+        channelsMenu = new JPopupMenu();
+        channelsMenu.setPopupSize(200,700);
+
+        channels = new JMenuItem("Kanaler");
+        channels.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                channelsMenu.setLocation(MouseInfo.getPointerInfo().getLocation());
+                channelsMenu.setVisible(true);
+            }
+        });
         menuBar.add(channels);
 
         frame.add(menuBar, BorderLayout.NORTH);
@@ -130,7 +153,7 @@ public class GUI
     {
         JMenuItem item = new JMenuItem(name);
         item.addActionListener(listener);
-        channels.add(item);
+        channelsMenu.add(item);
     }
 
 
@@ -206,7 +229,7 @@ public class GUI
      */
     public void changeChannel(ArrayList<EpisodeData> data)
     {
-
+        channelsMenu.setVisible(false);
         infoPanel.setVisible(false);
 
         int rowCount = tableModel.getRowCount();
@@ -225,6 +248,15 @@ public class GUI
     }
 
     /**
+     * Displays a message in a popup window
+     * @param message The message to be displayed
+     */
+    public void displayMessage(String message)
+    {
+        JOptionPane.showMessageDialog(null, message, "info",  JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
      * Enables or disables the gui
      * @param enabled the status
      */
@@ -232,6 +264,7 @@ public class GUI
     {
         channels.setEnabled(enabled);
         updateButton.setEnabled(enabled);
+        channelsMenu.setVisible(false);
     }
 
     /**

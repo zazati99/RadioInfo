@@ -37,6 +37,9 @@ public class Controller implements ActionListener
      */
     ChannelData currentChannel;
 
+    /**
+     * Constructor for Controller, Creates timer and GUI
+     */
     public Controller()
     {
         SwingUtilities.invokeLater(new Runnable() {
@@ -137,9 +140,9 @@ public class Controller implements ActionListener
             gui.addChannel(channel.getTitle(), new ActionListener()
             {
                 @Override
-                public void actionPerformed(ActionEvent actionEvent)
+                public void actionPerformed(ActionEvent e)
                 {
-                    goToChannel(channel);
+                    Controller.this.goToChannel(channel);
                 }
             });
         }
@@ -151,7 +154,7 @@ public class Controller implements ActionListener
      */
     private void goToChannel(ChannelData data)
     {
-        // Check if the channel has an availible Shedule
+        // Check if the channel has an availible Schedule
         if (data.getScheduleUrl() != null)
         {
             gui.changingChannel = true;
@@ -176,9 +179,7 @@ public class Controller implements ActionListener
         }
         else
         {
-            JOptionPane.showMessageDialog(null,
-                    "Det finns ingen tillgänglig tablå för den här kanalen",
-                    "info",  JOptionPane.INFORMATION_MESSAGE);
+            gui.displayMessage("Det finns ingen tillgänglig tablå för den här kanalen");
         }
     }
 }

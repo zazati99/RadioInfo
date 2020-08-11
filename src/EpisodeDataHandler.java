@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -98,7 +99,8 @@ public class EpisodeDataHandler extends DefaultHandler
     {
 
         DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                DateTimeFormatter.ISO_INSTANT
+                        .withZone(ZoneId.of("GMT+1"));
 
         switch (qName)
         {

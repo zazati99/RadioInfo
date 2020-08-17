@@ -53,19 +53,21 @@ public class ChannelDataFactory
         }
         catch(ParserConfigurationException e)
         {
-            e.printStackTrace();
+            listener.factoryFailed(e.getMessage());
         }
         catch(SAXException e)
         {
-            e.printStackTrace();
+            listener.factoryFailed(e.getMessage());
         }
         catch(MalformedURLException e)
         {
-            e.printStackTrace();
+            listener.factoryFailed("The URL was malformed "
+                    + e.getMessage());
         }
         catch(IOException e)
         {
-            e.printStackTrace();
+            listener.factoryFailed("File could not be found "
+                    + e.getMessage());
         }
 
         return null;
@@ -82,11 +84,15 @@ public class ChannelDataFactory
         }
         catch (InterruptedException e)
         {
-            e.printStackTrace();
+            listener.factoryFailed(e.getMessage());
         }
         catch (ExecutionException e)
         {
-            e.printStackTrace();
+            listener.factoryFailed(e.getMessage());
+        }
+        catch (NullPointerException e)
+        {
+            listener.factoryFailed("Channel data was null");
         }
     }
 

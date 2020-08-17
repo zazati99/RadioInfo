@@ -26,6 +26,11 @@ public class GUI
     private JTable episodeTable;
 
     /**
+     * Channels menu
+     */
+    private JComboBox channels;
+
+    /**
      * Table model for programme table
      */
     private RadioInfoTableModel tableModel;
@@ -48,12 +53,12 @@ public class GUI
     /**
      * JMenu containing all the channles
      */
-    private JPopupMenu channelsMenu;
+    //private JPopupMenu channelsMenu;
 
     /**
-     *
+     * Channels button
      */
-    private JMenuItem channels;
+    //private JMenuItem channels;
 
     /**
      * Update button
@@ -128,17 +133,22 @@ public class GUI
         exitButton = new JMenuItem("Avsluta");
         menu.add(exitButton);
 
-        channelsMenu = new JPopupMenu();
-        channelsMenu.setPopupSize(200,700);
-
-        channels = new JMenuItem("Kanaler");
-        channels.addActionListener(new ActionListener() {
+        channels = new JComboBox();
+        channels.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                channelsMenu.setLocation(MouseInfo.getPointerInfo().getLocation());
-                channelsMenu.setVisible(true);
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                // Choose the channel
+                if (channels.getSelectedIndex() > 0)
+                {
+                    ComboBoxItem item = (ComboBoxItem) channels.getSelectedItem();
+                    item.choose();
+                }
             }
         });
+        channels.insertItemAt("Kanaler", 0);
+
         menuBar.add(channels);
 
         frame.add(menuBar, BorderLayout.NORTH);
@@ -149,11 +159,11 @@ public class GUI
      * @param name The channel name
      * @param listener The Actionlistner for the menu item
      */
-    public void addChannel(String name, ActionListener listener)
+    public void addChannel(String name, ItemChosenListener listener)
     {
-        JMenuItem item = new JMenuItem(name);
-        item.addActionListener(listener);
-        channelsMenu.add(item);
+        ComboBoxItem item = new ComboBoxItem(name);
+        item.addItemChosenListener(listener);
+        channels.addItem(item);
     }
 
 
@@ -208,7 +218,6 @@ public class GUI
      */
     public void addEpisodeRow(EpisodeData data)
     {
-
         JLabel title = new JLabel(data.getTitle(), JLabel.CENTER);
 
         JLabel time = new JLabel(data.getTime(), JLabel.CENTER);
@@ -229,7 +238,6 @@ public class GUI
      */
     public void changeChannel(ArrayList<EpisodeData> data)
     {
-        channelsMenu.setVisible(false);
         infoPanel.setVisible(false);
 
         int rowCount = tableModel.getRowCount();
@@ -253,7 +261,8 @@ public class GUI
      */
     public void displayMessage(String message)
     {
-        JOptionPane.showMessageDialog(null, message, "info",  JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, message,
+                "info",  JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -264,7 +273,7 @@ public class GUI
     {
         channels.setEnabled(enabled);
         updateButton.setEnabled(enabled);
-        channelsMenu.setVisible(false);
+        //channelsMenu.setVisible(false);
     }
 
     /**

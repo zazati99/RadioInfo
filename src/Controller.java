@@ -108,6 +108,13 @@ public class Controller implements ActionListener
                                 Controller.this.addChannelButtons();
                                 gui.setGUIEnabled(true);
                             }
+
+                            @Override
+                            public void factoryFailed(String errorMessage)
+                            {
+                                gui.displayMessage(errorMessage);
+                                gui.setGUIEnabled(true);
+                            }
                         });
                 factory.execute();
 
@@ -137,10 +144,10 @@ public class Controller implements ActionListener
         for (int i = 0; i < channelData.size(); i++)
         {
             ChannelData channel = channelData.get(i);
-            gui.addChannel(channel.getTitle(), new ActionListener()
+            gui.addChannel(channel.getTitle(), new ItemChosenListener()
             {
                 @Override
-                public void actionPerformed(ActionEvent e)
+                public void itemChosen()
                 {
                     Controller.this.goToChannel(channel);
                 }
@@ -161,15 +168,24 @@ public class Controller implements ActionListener
             gui.setGUIEnabled(false);
 
             EpisodeDataFactory factory = new EpisodeDataFactory(data,
-                    new FactoryDoneListener() {
+                    new FactoryDoneListener()
+                    {
                         @Override
-                        public void factoryDone(Object returnValue) {
+                        public void factoryDone(Object returnValue)
+                        {
                             ArrayList<EpisodeData> episodeData =
                                     (ArrayList<EpisodeData>) returnValue;
 
                             gui.changeChannel(episodeData);
 
                             Controller.this.episodeData = episodeData;
+                            gui.setGUIEnabled(true);
+                        }
+
+                        @Override
+                        public void factoryFailed(String errorMessage)
+                        {
+                            gui.displayMessage(errorMessage);
                             gui.setGUIEnabled(true);
                         }
                     });

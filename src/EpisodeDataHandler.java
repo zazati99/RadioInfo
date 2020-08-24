@@ -62,6 +62,10 @@ public class EpisodeDataHandler extends DefaultHandler
      */
     Image defaultImage;
 
+    /**
+     * Constructor for EpisodeDataHandler
+     * @param defaultImage The default image to be used if the episode is missing one
+     */
     public EpisodeDataHandler(Image defaultImage)
     {
         this.defaultImage = defaultImage;

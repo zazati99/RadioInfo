@@ -30,6 +30,10 @@ public class ChannelDataFactory
      */
     FactoryDoneListener listener;
 
+    /**
+     * Cibstructor for ChannelDataFactory
+     * @param listner FactoryDoneListener that will be called when the factory is done
+     */
     public ChannelDataFactory(FactoryDoneListener listner)
     {
         this.listener = listner;

@@ -30,6 +30,11 @@ public class EpisodeDataFactory extends SwingWorker<ArrayList<EpisodeData>, Void
      */
     private ChannelData channelData;
 
+    /**
+     * Constructor for EpisodeDataFactory
+     * @param data Data for the channel to get the episodes from
+     * @param listner FactoryDoneListener that will be called when the episodes are loaded
+     */
     public EpisodeDataFactory(ChannelData data , FactoryDoneListener listner)
     {
         this.listener = listner;

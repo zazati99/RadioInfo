@@ -43,6 +43,10 @@ public class EpisodeInfoPanel extends JPanel
      */
     JLabel status;
 
+    /**
+     * Constructor for EpisodeInfoPanel
+     * Initializes the panel
+     */
     public EpisodeInfoPanel()
     {
         this.setLayout(new BorderLayout());

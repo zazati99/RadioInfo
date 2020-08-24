@@ -50,15 +50,6 @@ public class GUI
      */
     private EpisodeInfoPanel infoPanel;
 
-    /**
-     * JMenu containing all the channles
-     */
-    //private JPopupMenu channelsMenu;
-
-    /**
-     * Channels button
-     */
-    //private JMenuItem channels;
 
     /**
      * Update button
